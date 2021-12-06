@@ -26,15 +26,12 @@ export default {
       try{
         const res = await _fetchMovie({
           ...payload,
-          page: 1
+          page : 1
         })
         const { Search, totalResults } = res.data
         commit('updateState', {
-          movies: _uniqBy(Search,'imdbID')
+          movies: [..._uniqBy(Search,'imdbID')]
         })
-        // console.log(totalResults) // 294
-        // console.log(typeof totalResults) // string
-        // console.log(state.movies)
   
         const total = parseInt(totalResults, 10)
         const pageLength = Math.ceil(total / 10)
@@ -47,12 +44,11 @@ export default {
            
             const res = await _fetchMovie({
               ...payload,
-              page: 1
+              page
             })
             const { Search } = res.data
             commit('updateState', {
-              movies: [...state.movies, 
-                ..._uniqBy(Search,'imdbID')]
+              movies: [...state.movies,..._uniqBy(Search,'imdbID')]
             })
           }
         }
@@ -69,15 +65,14 @@ export default {
 }
 
 function _fetchMovie(payload) {
-  const {title, type, page, year } = payload
+  const { title, type, page, year } = payload
   const OMDB_API_KEY = '7035c60c'
-  const url = `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&year=${year}&page=${page}`
-  console.log(url)
+  const url = `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}`
+  // console.log(url)
 
   return new Promise((resolve, reject) => {
     axios.get(url)
     .then(res => {
-      console.log(res)
       if(res.data.Error)
       {
         reject(res.data.Error)

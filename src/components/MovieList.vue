@@ -7,8 +7,9 @@
       <div class="movies">
         <MovieItem
           v-for="movie in movies" 
-          :key="movie.imdbID" 
+          :key="movie" 
           :movie="movie" />
+        <!-- {{ movies }} -->
       </div>
     </div>
   </div>
