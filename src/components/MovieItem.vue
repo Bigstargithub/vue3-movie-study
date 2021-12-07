@@ -2,13 +2,13 @@
   <div 
     :style="{ backgroundImage: `url(${movie.Poster}`}"
     class="movie">
-  </div>
-  <div class="info">
-    <div class="year">
-      {{ movie.Year }}
-    </div>
-    <div class="title">
-      {{ movie.Title }}
+    <div class="info">
+      <div class="year">
+        {{ movie.Year }}
+      </div>
+      <div class="title">
+        {{ movie.Title }}
+      </div>
     </div>
   </div>
 </template>
@@ -38,6 +38,15 @@ export default {
   background-size: cover;
   overflow: hidden;
   position:relative;
+  &:hover::after{
+    content:"";
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    border: 6px solid $primary;
+  }
   .info{
     background-color: rgba($black, .3);
     width:100%;

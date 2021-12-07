@@ -5,8 +5,9 @@ export default {
   namespaced: true, // module이 될 수 있다.
   state: () => ({
     movies: [],
-    message: '',
-    loading: false
+    message: 'Search for the movie title!',
+    loading: false,
+    theMovie: {}
   }), // 취급해야하는 데이터들 (상태)
   getters: {}, // = computed 
   mutations: {
@@ -22,7 +23,12 @@ export default {
   // mutations 에서만 data 변경이 가능
   actions: {
     async searchMovies({ state,commit },payload) {
+      if(state.loading) return
 
+      commit('updateState', {
+        message: '',
+        loading: true
+      })
       try{
         const res = await _fetchMovie({
           ...payload,
@@ -57,18 +63,49 @@ export default {
           movies: [],
           message
         })
+      } finally {
+        commit('updateState', {
+          loading:false
+        })
+      }
+    },
+    async searchMoviesWithId({state, commit}, payload){
+      if(state.loading) return
+
+      commit('updateState', {
+        theMovie: {},
+        loading: true
+      })
+
+      try {
+        const res = await _fetchMovie(payload)
+        commit('updateState', {
+          theMovie: res.data
+        })
+        
+      } catch (error) {
+        commit('updateState', {
+          theMovie: {}
+        })
+        console.error(error)
+      } finally {
+        commit('updateState', {
+          loading: false
+        })
       }
     }
-  } // 비동기로 동작을 한다.
+  } 
+  // 비동기로 동작을 한다.
   // commit = mutations
   // payload = searchMovies가 호출될 때 특정한 parameter를 처리하는 매개변수
 }
 
 function _fetchMovie(payload) {
-  const { title, type, page, year } = payload
+  const { title, type, page, year, id } = payload
   const OMDB_API_KEY = '7035c60c'
-  const url = `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}`
-  // console.log(url)
+  const url = id 
+  ? `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&i=${id}` 
+  :`https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}`
 
   return new Promise((resolve, reject) => {
     axios.get(url)
