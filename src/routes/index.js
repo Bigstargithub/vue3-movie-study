@@ -9,7 +9,9 @@ export default createRouter({
   // https://google.com/#/search : Hash,
   // History : 별도 셋팅 가능
   history: createWebHashHistory(),
-
+  scrollBehavior() {
+    return { top: 0 }
+  },
   // pages
   // ex) https://google.com
   routes: [

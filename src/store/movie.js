@@ -1,11 +1,13 @@
 import axios from 'axios'
 import _uniqBy from 'lodash'
 
+const _msg = 'Search for the movie title!';
+
 export default {
   namespaced: true, // module이 될 수 있다.
   state: () => ({
     movies: [],
-    message: 'Search for the movie title!',
+    message: _msg,
     loading: false,
     theMovie: {}
   }), // 취급해야하는 데이터들 (상태)
@@ -17,7 +19,9 @@ export default {
       })
     },
     resetMovies(state) {
-      state.movies = []
+      state.movies = [],
+      state.message = _msg,
+      state.loading = false
     }
   }, // = methods! , 변이
   // mutations 에서만 data 변경이 가능
